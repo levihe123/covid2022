@@ -8,15 +8,19 @@
   <body>
     <h1>Levi's homepage</h1>
     <p class="mypara">This page is my first webpage.</p>
-    <img src="happy.jpeg" alt="always be happy" width="300px">
+    <img id="myimg" src="happy2.jpg" alt="always be happy" width="300px">
     <br>
     <a href="https://www.happy.com">marvel comics</a>
     <ol>
-      <li>:)</li>
-      <li>:)</li>
-      <li>:)</li>
-      <li>:)</li>
-      <li>:)</li>
+      <li><a href="#" onclick="setimg('happy2.jpg')">:)</a></li>
+      <li><a href="#" onclick="setimg('happy.jpeg')">;)</a></li>
     </ol>
   </body>
+  <script type="text/javascript">
+
+    function setimg(imgname) {
+      document.getElementsById('myimg').src=imgname;
+    }
+
+  </script>
 </html>
