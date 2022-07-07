@@ -1,11 +1,7 @@
-body {
-  background: orange;
-  margin: 50px;
-  font-family: fantasy;
+.nav-wrapper {
+  background: blue;
 }
 
-.mypara{
-  color:red;
-  font-family: sans-serif;
-  font-size: 20px;
+.brand-logo {
+  margin-left: 25px;
 }
