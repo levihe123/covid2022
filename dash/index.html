@@ -75,7 +75,7 @@
 
   mapping();
   function mapping(){
-    var map = L.map('map').setView([43, -79], 13);
+    var map = L.map('map').setView([43, -79], 1);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	      maxZoom: 19,
 	      attribution: '© OpenStreetMap'
@@ -93,7 +93,7 @@ algo(map);
       pop = coviddata.data[i].location +"<br>"+coviddata.data[i].dead;
 
       var circle = L.circle([lat, lon], {
-	       color: 'red',
+	       color: 'blue',
 	       fillColor: '#f03',
 	       fillOpacity: 0.5,
 	       radius: rad
