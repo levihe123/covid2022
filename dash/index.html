@@ -28,7 +28,6 @@
     </nav>
 
     <div class="row">
-
         <div class="col s12 m6">
           <div class="card">
             <div class="card-content">
@@ -41,12 +40,11 @@
         <div class="col s12 m6">
           <div class="card">
             <div class="card-content">
-              <span class="card-title">Be happy</span>
-              <p>And I feel happy</p>
+              <span class="card-title">?</span>
+              <p>This card goes down a little bit but I don't know why</p>
             </div>
           </div>
         </div>
-
       </div>
 
 <div class="row">
@@ -67,7 +65,9 @@
 
     myhtml = "<ul class='collection'>"; //building a string to push to p tag
     for(i=0;i<5;i++){
-      myhtml=myhtml + " <li class='collection-item'>" + coviddata.data[i].location + " " + coviddata.data[i].dead +"</li>";
+      myending = coviddata.data[i].country_code.slice(0,1)+"/"+ coviddata.data[i].country_code +".gif";
+      myurl = "https://www.crwflags.com/fotw/images" + myending;
+      myhtml=myhtml + " <li class='collection-item avatar'><img src='"+myurl+"' width='40px' class='circle'>"+ coviddata.data[i].location + " <p>" + coviddata.data[i].dead + "</p></li>";
     }
     myhtml = myhtml + "</ul>"
     document.getElementById('mydata').innerHTML = myhtml;
@@ -75,13 +75,33 @@
 
   mapping();
   function mapping(){
-    var map = L.map('map').setView([51.505, -0.09], 13);
+    var map = L.map('map').setView([43, -79], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	      maxZoom: 19,
 	      attribution: '© OpenStreetMap'
     }).addTo(map);
-    var marker = L.marker([51.5, -0.09]).addTo(map);
+//    var marker = L.marker([51.5, -0.09]).addTo(map);
+algo(map);
 
+
+  function algo(map) {
+    for (i = 0; i < coviddata.data.length; i++) {
+      lat = coviddata.data[i].latitude;
+      lon = coviddata.data[i].longitude;
+      rad = coviddata.data[i].dead * 2;
+
+      pop = coviddata.data[i].location +"<br>"+coviddata.data[i].dead;
+
+      var circle = L.circle([lat, lon], {
+	       color: 'red',
+	       fillColor: '#f03',
+	       fillOpacity: 0.5,
+	       radius: rad
+       }).bindPopup(pop).addTo(map);
+
+    }
+
+  }
   }
 </script>
 
