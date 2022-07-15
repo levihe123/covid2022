@@ -70,7 +70,7 @@
       objs.sort((a,b) => b.dead - a.dead);
 
       myhtml = "<ul class='collection'>"; // building a string to push to p tag
-      for (i=0;i<50;i++) {
+      for (i=0;i<100;i++) {
         myending = coviddata.data[i].country_code.slice(0,1) + "/" + coviddata.data[i].country_code + ".gif";
         myurl = "https://www.crwflags.com/fotw/images/" + myending;
         myhtml = myhtml + "<li class='collection-item avatar'><img src='" + myurl + "' width='40px' class='circle'> " + coviddata.data[i].location + "<p>" + coviddata.data[i].dead + "</p></li>";
