@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Dashboard</title>
+    <title>Covid report</title>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <!-- Compiled and minified JavaScript -->
@@ -11,99 +11,139 @@
     <link rel="stylesheet" href="styles.css">
     <script src="covid.json"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
-  integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
-  crossorigin=""/>
-  <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+    integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
     integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
     crossorigin=""></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
   </head>
   <body>
     <nav>
       <div class="nav-wrapper">
-        <a href="#" class="brand-logo">Happy</a><i class="material-icons">alarm</i>
+        <a href="#" class="brand-logo"><i class="material-icons">adb</i></a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="sass.html">About</a></li>
-              </ul>
+          <li><a href="about.html">About</a></li>
+        </ul>
       </div>
     </nav>
 
     <div class="row">
-        <div class="col s12 m6">
-          <div class="card">
-            <div class="card-content">
-              <span class="card-title">Map</span>
-               <div id="map"></div>
-            </div>
+
+      <div class="col s12 m6">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">Map</span>
+            <div id="map"></div>
           </div>
         </div>
-
-        <div class="col s12 m6">
-          <div class="card">
-            <div class="card-content">
-              <span class="card-title">?</span>
-              <p>This card goes down a little bit but I don't know why</p>
-            </div>
+      </div>
+      <div class="col s12 m6">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">Chart</span>
+            <canvas id="bar-chart" width="800" height="450"></canvas>
           </div>
         </div>
       </div>
 
-<div class="row">
-  <div class="col s12">
-    <div class="card">
-      <div class="card-content">
-        <span class="card-title">Data</span>
-        <p id="mydata"></p>
+    </div>
+
+    <div class="row">
+      <div class="col s12">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">Data</span>
+            <p id="mydata"></p>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+
   </body>
 
-<script type="text/javascript">
-  pushdata();
-  function pushdata() {
+  <script type="text/javascript">
+    pushdata();
+    function pushdata() {
 
-    myhtml = "<ul class='collection'>"; //building a string to push to p tag
-    for(i=0;i<5;i++){
-      myending = coviddata.data[i].country_code.slice(0,1)+"/"+ coviddata.data[i].country_code +".gif";
-      myurl = "https://www.crwflags.com/fotw/images" + myending;
-      myhtml=myhtml + " <li class='collection-item avatar'><img src='"+myurl+"' width='40px' class='circle'>"+ coviddata.data[i].location + " <p>" + coviddata.data[i].dead + "</p></li>";
-    }
-    myhtml = myhtml + "</ul>"
-    document.getElementById('mydata').innerHTML = myhtml;
-  }
+      objs = coviddata.data;
+      objs.sort((a,b) => b.dead - a.dead);
 
-  mapping();
-  function mapping(){
-    var map = L.map('map').setView([43, -79], 1);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-	      maxZoom: 19,
-	      attribution: '© OpenStreetMap'
-    }).addTo(map);
-//    var marker = L.marker([51.5, -0.09]).addTo(map);
-algo(map);
-
-
-  function algo(map) {
-    for (i = 0; i < coviddata.data.length; i++) {
-      lat = coviddata.data[i].latitude;
-      lon = coviddata.data[i].longitude;
-      rad = coviddata.data[i].dead * 2;
-
-      pop = coviddata.data[i].location +"<br>"+coviddata.data[i].dead;
-
-      var circle = L.circle([lat, lon], {
-	       color: 'blue',
-	       fillColor: '#f03',
-	       fillOpacity: 0.5,
-	       radius: rad
-       }).bindPopup(pop).addTo(map);
-
+      myhtml = "<ul class='collection'>"; // building a string to push to p tag
+      for (i=0;i<50;i++) {
+        myending = coviddata.data[i].country_code.slice(0,1) + "/" + coviddata.data[i].country_code + ".gif";
+        myurl = "https://www.crwflags.com/fotw/images/" + myending;
+        myhtml = myhtml + "<li class='collection-item avatar'><img src='" + myurl + "' width='40px' class='circle'> " + coviddata.data[i].location + "<p>" + coviddata.data[i].dead + "</p></li>";
+      }
+      myhtml = myhtml + "</ul>"
+      document.getElementById('mydata').innerHTML = myhtml;
     }
 
-  }
-  }
-</script>
+    mapping();
+    function mapping() {
+      var map = L.map('map').setView([51,0], 1);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 1,
+          attribution: '© OpenStreetMap'
+      }).addTo(map);
+      // don't need the marker any more
+      //var marker = L.marker([51.5, -0.09]).addTo(map);
+      algo(map);
+    }
 
+    function algo(map) {
+      for (i=0;i<coviddata.data.length;i++) {
+        lat = coviddata.data[i].latitude;
+        lon = coviddata.data[i].longitude;
+        rad = coviddata.data[i].dead * 2;
+
+        pop = "<h5>Detail</h5>" + coviddata.data[i].location + "<br>" + coviddata.data[i].dead;
+
+        var circle = L.circle([lat, lon], {
+            color: 'blue',
+            fillColor: '#82b1ff',
+            fillOpacity: 0.5,
+            radius: rad
+        }).bindPopup(pop).addTo(map);
+      }
+    }
+
+    bar();
+    function bar() {
+
+      objs = coviddata.data;
+      objs.sort((a,b) => b.dead - a.dead);
+
+      mylabs = [];
+      mydata = [];
+      for (i=0;i<15;i++) {
+        mylabs.push(coviddata.data[i].location);
+        mydata.push(coviddata.data[i].dead);
+      }
+
+      new Chart(document.getElementById("bar-chart"), {
+        type: 'bar',
+        data: {
+          labels: mylabs,
+          datasets: [
+            {
+              label: "COVID deaths",
+              backgroundColor: ["#fdd835", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#b388ff","#3d5afe","#00bcd4","#8bc34a","#e91e63","#ff5722","#607d8b","#00e676","#03a9f4","#aa00ff"],
+              data: mydata
+            }
+          ]
+        },
+        options: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: 'COVID deaths 2021'
+          }
+        }
+      });
+    }
+
+
+  </script>
 
 </html>
